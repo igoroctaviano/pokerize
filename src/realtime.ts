@@ -39,9 +39,16 @@ export function useRoom(roomId: string) {
 
     const setupRoom = async () => {
       try {
-        // Generate player ID if not exists
+        // Generate or retrieve player ID from localStorage
         if (!playerIdRef.current) {
-          playerIdRef.current = nanoid(8)
+          const savedPlayerId = localStorage.getItem('pokerize-player-id')
+          if (savedPlayerId) {
+            playerIdRef.current = savedPlayerId
+          } else {
+            const newPlayerId = nanoid(8)
+            playerIdRef.current = newPlayerId
+            localStorage.setItem('pokerize-player-id', newPlayerId)
+          }
         }
         const localPlayerId = playerIdRef.current
         playersRef.current = players
@@ -152,9 +159,17 @@ export function useRoom(roomId: string) {
 
   const setName = useCallback(async (name: string) => {
     if (!roomState) return
-    const playerId = playerIdRef.current || nanoid(8)
-    if (!playerIdRef.current) {
-      playerIdRef.current = playerId
+    let playerId = playerIdRef.current
+    if (!playerId) {
+      const savedPlayerId = localStorage.getItem('pokerize-player-id')
+      if (savedPlayerId) {
+        playerId = savedPlayerId
+        playerIdRef.current = playerId
+      } else {
+        playerId = nanoid(8)
+        playerIdRef.current = playerId
+        localStorage.setItem('pokerize-player-id', playerId)
+      }
     }
 
     const current = roomState.players.get(playerId) || { 
@@ -185,9 +200,17 @@ export function useRoom(roomId: string) {
 
   const setSelected = useCallback(async (selected: string | null) => {
     if (!roomState) return
-    const playerId = playerIdRef.current || nanoid(8)
-    if (!playerIdRef.current) {
-      playerIdRef.current = playerId
+    let playerId = playerIdRef.current
+    if (!playerId) {
+      const savedPlayerId = localStorage.getItem('pokerize-player-id')
+      if (savedPlayerId) {
+        playerId = savedPlayerId
+        playerIdRef.current = playerId
+      } else {
+        playerId = nanoid(8)
+        playerIdRef.current = playerId
+        localStorage.setItem('pokerize-player-id', playerId)
+      }
     }
 
     const current = roomState.players.get(playerId) || { 

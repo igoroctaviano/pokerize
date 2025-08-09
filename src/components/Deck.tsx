@@ -10,7 +10,7 @@ export function Deck({ selected, onSelect }: { selected: string | null; onSelect
         {FIB_CARDS.map((c) => (
           <button
             key={c}
-            onClick={() => onSelect(c)}
+            onClick={() => onSelect(selected === c ? null : c)}
             className={cn(
               'relative w-14 h-14 rounded-full border-2 shadow-md transition-all duration-200 transform hover:scale-110 hover:shadow-lg',
               selected === c 
@@ -33,15 +33,6 @@ export function Deck({ selected, onSelect }: { selected: string | null; onSelect
             )}></div>
           </button>
         ))}
-        {selected && (
-          <Button 
-            variant="ghost" 
-            onClick={() => onSelect(null)} 
-            className="ml-3 text-muted-foreground hover:text-foreground"
-          >
-            Clear
-          </Button>
-        )}
       </div>
       <p className="mt-3 text-center text-sm text-muted-foreground">Choose your card 👇</p>
     </div>

@@ -21,8 +21,7 @@ export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boole
         )}>
           {show ? (
             <div className="flex flex-col items-center justify-center h-full p-1">
-              <div className="text-sm font-bold text-primary">{player.selected}</div>
-              <div className="text-xs text-muted-foreground mt-1">POINTS</div>
+              <div className="text-2xl font-bold text-primary">{player.selected}</div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full p-1">

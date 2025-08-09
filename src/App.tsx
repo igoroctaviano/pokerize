@@ -5,6 +5,7 @@ import { TopBar } from './components/TopBar'
 import { Seat } from './components/Seat'
 import { Deck } from './components/Deck'
 import { CenterControls } from './components/CenterControls'
+import { EstimateHistory } from './components/EstimateHistory'
 
 import { NameModal } from './components/NameModal'
 
@@ -22,7 +23,13 @@ export default function App() {
   const shared = useSharedState(room)
   const players = useAwareness(room)
 
-  const [name, setNameLocal] = useState<string>('')
+  const [name, setNameLocal] = useState<string>(() => {
+    // Try to get name from localStorage first
+    const savedName = localStorage.getItem('pokerize-username')
+    return savedName || ''
+  })
+  const [estimateHistory, setEstimateHistory] = useState<string[]>([])
+  const [lastRevealedState, setLastRevealedState] = useState(false)
   
   // Always show name modal if no name is set
   const [isNameOpen, setIsNameOpen] = useState(() => {
@@ -37,9 +44,50 @@ export default function App() {
     }
   }, [room, name, setName])
 
+  // Save name to localStorage when it changes
+  useEffect(() => {
+    if (name && name.trim().length > 0) {
+      localStorage.setItem('pokerize-username', name)
+    }
+  }, [name])
+
   const me = players.find((p) => p.clientId === playerId)
   const selected = (me?.selected as string | null) ?? null
   const values = players.map((p) => String(p.selected ?? ''))
+
+  // Track estimate history when cards are first revealed (not on every render)
+  useEffect(() => {
+    if (shared.revealed && !lastRevealedState && values.length > 0) {
+      // Only update when cards are first revealed (transition from false to true)
+      const valueCounts = values.reduce((acc, value) => {
+        if (value && value !== 'null') {
+          acc[value] = (acc[value] || 0) + 1
+        }
+        return acc
+      }, {} as Record<string, number>)
+
+      // Find the most common estimate, prioritizing highest number in case of ties
+      const mostCommon = Object.entries(valueCounts)
+        .sort(([aKey, aCount], [bKey, bCount]) => {
+          // First sort by count (descending)
+          if (bCount !== aCount) {
+            return bCount - aCount
+          }
+          // If counts are equal, sort by numeric value (descending) - highest number wins
+          const aNum = parseFloat(aKey) || 0
+          const bNum = parseFloat(bKey) || 0
+          return bNum - aNum
+        })[0]?.[0]
+
+      if (mostCommon) {
+        setEstimateHistory(prev => {
+          const newHistory = [mostCommon, ...prev.slice(0, 4)] // Keep only last 5
+          return newHistory
+        })
+      }
+    }
+    setLastRevealedState(shared.revealed)
+  }, [shared.revealed, values, lastRevealedState])
 
   const onInvite = async () => {
     await navigator.clipboard.writeText(window.location.href)
@@ -120,56 +168,66 @@ export default function App() {
         Room ID: {roomId} | Players: {players.length} | Connected: {connected ? 'Yes' : 'No'}
       </div>
 
-      <main className="mx-auto flex h-[calc(100vh-140px)] max-w-6xl flex-col items-center justify-center gap-8 px-4 relative">
-        {/* Modern Poker Table Layout */}
-        <div className="relative w-full h-full max-w-4xl mx-auto">
-          {/* Player Seats - Arranged like the example image */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-full h-full">
-              {players.map((p, index) => {
-                const totalPlayers = players.length
-                
-                // Arrange players in an evenly distributed semi-circular pattern like the example
-                let angle, radius
-                
-                if (totalPlayers <= 3) {
-                  // For 3 players: evenly spaced triangle, positioned to avoid center overlap
-                  angle = (index * 120) + 90 // 120° apart, starting from top
-                  radius = 180
-                } else if (totalPlayers <= 6) {
-                  // For 4-6 players: evenly distributed semi-circle, avoiding center
-                  angle = (index * 180 / (totalPlayers - 1)) + 90 // 180° spread, evenly distributed
-                  radius = 200
-                } else {
-                  // For 7+ players: wider semi-circle with even distribution
-                  angle = (index * 200 / (totalPlayers - 1)) + 80 // 200° spread, evenly distributed
-                  radius = 220
-                }
-                
-                return (
-                  <div
-                    key={p.clientId}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      left: `calc(50% + ${Math.cos((angle * Math.PI) / 180) * radius}px)`,
-                      top: `calc(50% + ${Math.sin((angle * Math.PI) / 180) * radius}px)`,
-                    }}
-                  >
-                    <Seat player={{ name: p.name || 'Guest', selected: p.selected ?? null }} revealed={shared.revealed} />
-                  </div>
-                )
-              })}
+      <div className="relative">
+        {/* Main Game Area - Centered independently of sidebar */}
+        <main className="absolute inset-0 flex h-[calc(100vh-140px)] flex-col items-center justify-center gap-8 px-4">
+          {/* Modern Poker Table Layout */}
+          <div className="relative w-full h-full max-w-4xl mx-auto">
+            {/* Player Seats - Arranged like the example image */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                {players
+                  .sort((a, b) => a.clientId.localeCompare(b.clientId)) // Stable sorting by player ID
+                  .map((p, index) => {
+                  const totalPlayers = players.length
+                  
+                  // Arrange players in an evenly distributed semi-circular pattern like the example
+                  let angle, radius
+                  
+                  if (totalPlayers <= 3) {
+                    // For 3 players: evenly spaced triangle, positioned to avoid center overlap
+                    angle = (index * 120) + 90 // 120° apart, starting from top
+                    radius = 180
+                  } else if (totalPlayers <= 6) {
+                    // For 4-6 players: evenly distributed semi-circle, avoiding center
+                    angle = (index * 180 / (totalPlayers - 1)) + 90 // 180° spread, evenly distributed
+                    radius = 200
+                  } else {
+                    // For 7+ players: wider semi-circle with even distribution
+                    angle = (index * 200 / (totalPlayers - 1)) + 80 // 200° spread, evenly distributed
+                    radius = 220
+                  }
+                  
+                  return (
+                    <div
+                      key={p.clientId}
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                      style={{
+                        left: `calc(50% + ${Math.cos((angle * Math.PI) / 180) * radius}px)`,
+                        top: `calc(50% + ${Math.sin((angle * Math.PI) / 180) * radius}px)`,
+                      }}
+                    >
+                      <Seat player={{ name: p.name || 'Guest', selected: p.selected ?? null }} revealed={shared.revealed} />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Center Controls */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <CenterControls revealed={shared.revealed} onReveal={reveal} onReset={resetRound} values={values} />
             </div>
           </div>
 
-          {/* Center Controls */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <CenterControls revealed={shared.revealed} onReveal={reveal} onReset={resetRound} values={values} />
-          </div>
-        </div>
+          <Deck selected={selected} onSelect={(v) => setSelected(v)} />
+        </main>
 
-        <Deck selected={selected} onSelect={(v) => setSelected(v)} />
-      </main>
+        {/* Estimate History Sidebar - Positioned absolutely on the right */}
+        <div className="absolute right-0 top-0 h-full">
+          <EstimateHistory estimates={estimateHistory} />
+        </div>
+      </div>
 
       <NameModal
         open={isNameOpen}

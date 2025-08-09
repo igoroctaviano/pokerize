@@ -1,4 +1,3 @@
-import { Button } from './ui/button'
 import { cn } from '../lib/utils'
 
 const FIB_CARDS = ['0','1','2','3','5','8','13','21','34','55','89','?','☕️']

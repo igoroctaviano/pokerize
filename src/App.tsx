@@ -6,7 +6,6 @@ import { Seat } from './components/Seat'
 import { Deck } from './components/Deck'
 import { CenterControls } from './components/CenterControls'
 import { EstimateHistory } from './components/EstimateHistory'
-
 import { NameModal } from './components/NameModal'
 
 const getOrCreateRoomId = () => {

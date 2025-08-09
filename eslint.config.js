@@ -26,6 +26,7 @@ export default [
         setTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
+        localStorage: 'readonly',
         KeyboardEvent: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLButtonElement: 'readonly',

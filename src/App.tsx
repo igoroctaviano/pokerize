@@ -120,15 +120,53 @@ export default function App() {
         Room ID: {roomId} | Players: {players.length} | Connected: {connected ? 'Yes' : 'No'}
       </div>
 
-      <main className="mx-auto flex h-[calc(100vh-120px)] max-w-5xl flex-col items-center justify-center gap-16 px-4">
-        {/* Seats */}
-        <div className="grid w-full grid-cols-2 items-center justify-items-center gap-10 sm:grid-cols-3">
-          {players.map((p) => (
-            <Seat key={p.clientId} player={{ name: p.name || 'Guest', selected: p.selected ?? null }} revealed={shared.revealed} />
-          ))}
-        </div>
+      <main className="mx-auto flex h-[calc(100vh-140px)] max-w-6xl flex-col items-center justify-center gap-8 px-4 relative">
+        {/* Modern Poker Table Layout */}
+        <div className="relative w-full h-full max-w-4xl mx-auto">
+          {/* Player Seats - Arranged like the example image */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative w-full h-full">
+              {players.map((p, index) => {
+                const totalPlayers = players.length
+                
+                // Arrange players in an evenly distributed semi-circular pattern like the example
+                let angle, radius
+                
+                if (totalPlayers <= 3) {
+                  // For 3 players: evenly spaced triangle, positioned to avoid center overlap
+                  angle = (index * 120) + 90 // 120° apart, starting from top
+                  radius = 180
+                } else if (totalPlayers <= 6) {
+                  // For 4-6 players: evenly distributed semi-circle, avoiding center
+                  angle = (index * 180 / (totalPlayers - 1)) + 90 // 180° spread, evenly distributed
+                  radius = 200
+                } else {
+                  // For 7+ players: wider semi-circle with even distribution
+                  angle = (index * 200 / (totalPlayers - 1)) + 80 // 200° spread, evenly distributed
+                  radius = 220
+                }
+                
+                return (
+                  <div
+                    key={p.clientId}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      left: `calc(50% + ${Math.cos((angle * Math.PI) / 180) * radius}px)`,
+                      top: `calc(50% + ${Math.sin((angle * Math.PI) / 180) * radius}px)`,
+                    }}
+                  >
+                    <Seat player={{ name: p.name || 'Guest', selected: p.selected ?? null }} revealed={shared.revealed} />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
 
-        <CenterControls revealed={shared.revealed} onReveal={reveal} onReset={resetRound} values={values} />
+          {/* Center Controls */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <CenterControls revealed={shared.revealed} onReveal={reveal} onReset={resetRound} values={values} />
+          </div>
+        </div>
 
         <Deck selected={selected} onSelect={(v) => setSelected(v)} />
       </main>

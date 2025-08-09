@@ -8,12 +8,44 @@ export type SeatPlayer = {
 
 export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boolean }) {
   const show = revealed && player.selected !== null
+  
   return (
     <div className="flex flex-col items-center gap-2">
-      <Card className={cn('grid h-14 w-8 place-items-center rounded-md border', show ? 'bg-primary/20' : 'bg-muted/30')}>
-        <span className="text-xs">{show ? player.selected : ''}</span>
-      </Card>
-      <div className="text-sm font-medium text-center w-24 truncate">{player.name || 'Guest'}</div>
+      {/* Modern Card */}
+      <div className="relative">
+        <Card className={cn(
+          'h-16 w-12 rounded-lg border-2 shadow-lg transition-all duration-300 transform hover:scale-105',
+          show 
+            ? 'bg-card text-card-foreground border-border' 
+            : 'bg-muted/30 border-border/50'
+        )}>
+          {show ? (
+            <div className="flex flex-col items-center justify-center h-full p-1">
+              <div className="text-sm font-bold text-primary">{player.selected}</div>
+              <div className="text-xs text-muted-foreground mt-1">POINTS</div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full p-1">
+              <div className="w-5 h-6 bg-muted/50 rounded border border-border/30 flex items-center justify-center">
+                <div className="text-muted-foreground text-xs font-bold">♠</div>
+              </div>
+            </div>
+          )}
+        </Card>
+        
+        {/* Card shadow */}
+        <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/10 rounded-full blur-sm"></div>
+      </div>
+      
+      {/* Player Name */}
+      <div className="flex flex-col items-center gap-1">
+        <div className="w-6 h-6 rounded-full bg-muted/50 border border-border/30 flex items-center justify-center shadow-sm">
+          <div className="text-muted-foreground text-xs font-bold">♠</div>
+        </div>
+        <div className="text-sm font-medium text-center w-28 truncate text-foreground">
+          {player.name || 'Guest'}
+        </div>
+      </div>
     </div>
   )
 }

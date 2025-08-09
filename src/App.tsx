@@ -5,7 +5,7 @@ import { TopBar } from './components/TopBar'
 import { Seat } from './components/Seat'
 import { Deck } from './components/Deck'
 import { CenterControls } from './components/CenterControls'
-import { Button } from './components/ui/button'
+
 import { NameModal } from './components/NameModal'
 
 const getOrCreateRoomId = () => {

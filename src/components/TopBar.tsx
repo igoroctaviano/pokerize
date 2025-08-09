@@ -1,5 +1,5 @@
 import { Button } from './ui/button'
-import { cn } from '../lib/utils'
+
 import { Copy, Users } from 'lucide-react'
 
 type Props = {

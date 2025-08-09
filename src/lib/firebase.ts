@@ -1,14 +1,14 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 
-// Firebase configuration for GuessOps planning poker app
+// Firebase configuration for Pokerize planning poker app
 const firebaseConfig = {
-  apiKey: "AIzaSyCEHom4DxjDq-2ZCUBwN-RTCoqn5ANYgaQ",
-  authDomain: "pokerize-app.firebaseapp.com",
-  projectId: "pokerize-app",
-  storageBucket: "pokerize-app.firebasestorage.app",
-  messagingSenderId: "333202499897",
-  appId: "1:333202499897:web:3139dacbd2aaa2a1c360e8"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 }
 
 // Initialize Firebase

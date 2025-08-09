@@ -23,18 +23,20 @@ A real-time planning poker application built with React, TypeScript, and Firebas
 
 ### 2. Configure Firebase
 
-1. Open `src/lib/firebase.ts`
-2. Replace the placeholder values with your actual Firebase config:
+1. Copy the example environment file:
+   ```bash
+   cp env.example .env
+   ```
 
-```typescript
-const firebaseConfig = {
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
-}
+2. Open `.env` and replace the placeholder values with your actual Firebase config:
+
+```bash
+VITE_FIREBASE_API_KEY=your-actual-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
 ```
 
 ### 3. Firestore Security Rules
@@ -59,13 +61,13 @@ service cloud.firestore {
 ### 4. Install Dependencies
 
 ```bash
-npm install
+yarn install
 ```
 
 ### 5. Run the App
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 ## Usage

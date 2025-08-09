@@ -62,8 +62,19 @@ node_modules/
 # Yarn Integrity file
 .yarn-integrity
 
+# Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
 # dotenv environment variables file
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # dataconnect generated files
 .dataconnect

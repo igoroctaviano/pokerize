@@ -9,7 +9,21 @@ A real-time planning poker application built with React, TypeScript, and Firebas
 - Live vote synchronization
 - Card reveal functionality
 - Reset rounds
-- Modern UI with Tailwind CSS
+- Modern UI with Tailwind CSS and Radix UI components
+
+## Prerequisites
+
+- Node.js 18.x or higher
+- Yarn (recommended) or npm
+- Firebase account
+
+## Tech Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Radix UI components
+- **Backend**: Firebase Firestore (real-time database)
+- **Deployment**: Firebase Hosting
+- **Code Quality**: ESLint, Prettier
 
 ## Setup
 
@@ -23,6 +37,13 @@ A real-time planning poker application built with React, TypeScript, and Firebas
 
 ### 2. Configure Firebase
 
+**Option A: Use the setup script (recommended)**
+```bash
+chmod +x setup-env.sh
+./setup-env.sh
+```
+
+**Option B: Manual setup**
 1. Copy the example environment file:
    ```bash
    cp env.example .env
@@ -70,6 +91,60 @@ yarn install
 yarn dev
 ```
 
+## Development
+
+### Available Scripts
+
+- `yarn dev` - Start development server
+- `yarn build` - Build for production
+- `yarn preview` - Preview production build
+- `yarn lint` - Run ESLint
+- `yarn lint:fix` - Fix ESLint issues
+- `yarn type-check` - Run TypeScript type checking
+- `yarn format` - Format code with Prettier
+- `yarn format:check` - Check code formatting
+- `yarn clean` - Clean and reinstall dependencies
+
+### Code Quality
+
+The project uses:
+- **ESLint** for code linting
+- **Prettier** for code formatting
+- **TypeScript** for type safety
+
+## Deployment
+
+### Deploy to Firebase Hosting
+
+1. Install Firebase CLI (if not already installed):
+   ```bash
+   npm install -g firebase-tools
+   ```
+
+2. Login to Firebase:
+   ```bash
+   firebase login
+   ```
+
+3. Initialize Firebase (if not already done):
+   ```bash
+   firebase init hosting
+   ```
+
+4. Deploy using the provided script:
+   ```bash
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+
+Or deploy manually:
+```bash
+yarn build
+firebase deploy --only hosting
+```
+
+Your app will be available at: `https://your-project-id.web.app`
+
 ## Usage
 
 1. Open the app in your browser
@@ -96,3 +171,7 @@ Firestore's free tier includes:
 - ~10 GiB/month egress
 
 This is more than sufficient for typical planning poker sessions with 5-10 people.
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.

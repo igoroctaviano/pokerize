@@ -1,0 +1,21 @@
+{
+  "name": "Pokerize - Planning Poker",
+  "short_name": "Pokerize",
+  "description": "A modern planning poker app for agile teams",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "120x120",
+      "type": "image/svg+xml"
+    }
+  ]
+}

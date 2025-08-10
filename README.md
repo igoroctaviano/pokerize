@@ -13,7 +13,7 @@ A real-time planning poker application built with React, TypeScript, and Firebas
 
 ## Prerequisites
 
-- Node.js 18.x or higher
+- Node.js 21.x or higher
 - Yarn (recommended) or npm
 - Firebase account
 
@@ -60,6 +60,8 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
 VITE_FIREBASE_APP_ID=your-app-id
 ```
 
+**Note**: This project is configured to deploy to the `pokerize-app` Firebase project. If you're setting up your own instance, update the project ID accordingly.
+
 ### 3. Firestore Security Rules
 
 Set up Firestore security rules to allow read/write access:
@@ -104,6 +106,7 @@ yarn dev
 - `yarn format` - Format code with Prettier
 - `yarn format:check` - Check code formatting
 - `yarn clean` - Clean and reinstall dependencies
+- `yarn install-deps` - Install dependencies
 
 ### Code Quality
 
@@ -145,7 +148,7 @@ yarn build
 firebase deploy --only hosting
 ```
 
-Your app will be available at: `https://your-project-id.web.app`
+Your app will be available at: `https://pokerize-app.web.app`
 
 #### GitHub Actions Deployment
 
@@ -172,6 +175,7 @@ The project includes automatic deployment via GitHub Actions. To set this up:
 3. **Automatic Deployment**:
    - Push to the `main` branch to trigger automatic deployment
    - The app will be deployed to Firebase Hosting automatically
+   - The workflow includes debugging steps to verify the Firebase token is set correctly
 
 ## Usage
 

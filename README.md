@@ -116,6 +116,8 @@ The project uses:
 
 ### Deploy to Firebase Hosting
 
+#### Local Deployment
+
 1. Install Firebase CLI (if not already installed):
    ```bash
    npm install -g firebase-tools
@@ -144,6 +146,32 @@ firebase deploy --only hosting
 ```
 
 Your app will be available at: `https://your-project-id.web.app`
+
+#### GitHub Actions Deployment
+
+The project includes automatic deployment via GitHub Actions. To set this up:
+
+1. **Generate Firebase Token**:
+   ```bash
+   firebase login:ci
+   ```
+   This will open a browser window. After authentication, copy the token.
+
+2. **Add GitHub Secrets**:
+   Go to your repository → Settings → Secrets and variables → Actions
+   
+   Add these secrets:
+   - `FIREBASE_TOKEN` - The token from step 1
+   - `VITE_FIREBASE_API_KEY` - Your Firebase API key
+   - `VITE_FIREBASE_AUTH_DOMAIN` - Your Firebase auth domain
+   - `VITE_FIREBASE_PROJECT_ID` - Your Firebase project ID
+   - `VITE_FIREBASE_STORAGE_BUCKET` - Your Firebase storage bucket
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID` - Your Firebase messaging sender ID
+   - `VITE_FIREBASE_APP_ID` - Your Firebase app ID
+
+3. **Automatic Deployment**:
+   - Push to the `main` branch to trigger automatic deployment
+   - The app will be deployed to Firebase Hosting automatically
 
 ## Usage
 

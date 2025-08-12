@@ -11,22 +11,24 @@ export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boole
   const hasSelected = player.selected !== null
   
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-1 sm:gap-2">
       {/* Modern Card */}
       <div className="relative">
         <Card className={cn(
-          'h-16 w-12 rounded-lg border-2 shadow-lg transition-all duration-300 transform hover:scale-105',
+          'h-10 w-7 sm:h-12 sm:w-9 md:h-16 md:w-12 rounded-lg border-2 shadow-lg transition-all duration-300 transform hover:scale-105',
           show 
             ? 'bg-card text-card-foreground border-border' 
-            : 'bg-muted/30 border-border/50'
+            : hasSelected
+              ? 'bg-muted/30 border-green-500/70' // Green border when user has selected
+              : 'bg-muted/30 border-border/50'
         )}>
           {show ? (
             <div className="flex flex-col items-center justify-center h-full p-1">
-              <div className="text-2xl font-bold text-primary">{player.selected}</div>
+              <div className="text-sm sm:text-lg md:text-2xl font-bold text-primary">{player.selected}</div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full p-1">
-              <div className="w-5 h-6 bg-muted/50 rounded border border-border/30 flex items-center justify-center">
+              <div className="w-3 h-4 sm:w-4 sm:h-5 md:w-5 md:h-6 bg-muted/50 rounded border border-border/30 flex items-center justify-center">
                 <div className="text-muted-foreground text-xs font-bold">♠</div>
               </div>
             </div>
@@ -39,15 +41,15 @@ export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boole
       
       {/* Player Name */}
       <div className="flex flex-col items-center gap-1">
-        <div className="w-6 h-6 rounded-full bg-muted/50 border border-border/30 flex items-center justify-center shadow-sm">
-          <div className={cn(
-            "font-bold",
-            hasSelected ? "text-green-500 text-base" : "text-muted-foreground text-xs"
-          )}>
+        <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full bg-muted/50 border border-border/30 flex items-center justify-center shadow-sm">
+                      <div className={cn(
+              "font-bold",
+              hasSelected ? "text-green-500 text-xs sm:text-sm md:text-base" : "text-muted-foreground text-xs"
+            )}>
             {hasSelected ? "✓" : "♠"}
           </div>
         </div>
-        <div className="text-sm font-medium text-center w-28 truncate text-foreground">
+        <div className="text-xs sm:text-sm font-medium text-center w-16 sm:w-20 md:w-28 truncate text-foreground">
           {player.name || 'Guest'}
         </div>
       </div>

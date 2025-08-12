@@ -16,11 +16,30 @@ const getOrCreateRoomId = () => {
   return id
 }
 
+// Custom hook for responsive design
+function useResponsiveRadius() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return isMobile
+}
+
 export default function App() {
   const roomId = useMemo(getOrCreateRoomId, [])
   const { room, loading, connected, setName, setSelected, reveal, resetRound, playerId } = useRoom(roomId)
   const shared = useSharedState(room)
   const players = useAwareness(room)
+  const isMobile = useResponsiveRadius()
 
   const [name, setNameLocal] = useState<string>(() => {
     // Try to get name from localStorage first
@@ -93,8 +112,6 @@ export default function App() {
     alert('Invite link copied to clipboard!')
   }
 
-
-
   // Show loading indicator until users are successfully connected
   if (loading) {
     return (
@@ -154,7 +171,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <TopBar
         name={name || 'Guest'}
         playersCount={players.length}
@@ -167,9 +184,10 @@ export default function App() {
         Room ID: {roomId} | Players: {players.length} | Connected: {connected ? 'Yes' : 'No'}
       </div>
 
-      <div className="relative">
-        {/* Main Game Area - Centered independently of sidebar */}
-        <main className="absolute inset-0 flex h-[calc(100vh-160px)] flex-col items-center justify-center gap-6 px-4 pt-4">
+      {/* Main Game Area - Uses flexbox for responsive layout */}
+      <div className="flex-1 flex flex-col relative">
+        {/* Game Content - Takes available space and centers content */}
+        <main className="flex-1 flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-6 px-1 sm:px-2 md:px-4 pt-1 sm:pt-2 md:pt-4 pb-1 sm:pb-2 md:pb-4 relative">
           {/* Modern Poker Table Layout */}
           <div className="relative w-full h-full max-w-4xl mx-auto">
             {/* Player Seats - Arranged like the example image */}
@@ -186,15 +204,15 @@ export default function App() {
                   if (totalPlayers <= 3) {
                     // For 3 players: evenly spaced triangle, positioned to avoid center overlap
                     angle = (index * 120) + 90 // 120° apart, starting from top
-                    radius = 160
+                    radius = isMobile ? 100 : 160 // Smaller radius on mobile
                   } else if (totalPlayers <= 6) {
                     // For 4-6 players: evenly distributed semi-circle, avoiding center
                     angle = (index * 180 / (totalPlayers - 1)) + 90 // 180° spread, evenly distributed
-                    radius = 180
+                    radius = isMobile ? 120 : 180 // Smaller radius on mobile
                   } else {
                     // For 7+ players: wider semi-circle with even distribution
                     angle = (index * 200 / (totalPlayers - 1)) + 80 // 200° spread, evenly distributed
-                    radius = 200
+                    radius = isMobile ? 140 : 200 // Smaller radius on mobile
                   }
                   
                   return (
@@ -218,14 +236,17 @@ export default function App() {
               <CenterControls revealed={shared.revealed} onReveal={reveal} onReset={resetRound} values={values} />
             </div>
           </div>
-
-          <Deck selected={selected} onSelect={(v) => setSelected(v)} />
         </main>
 
         {/* Estimate History Sidebar - Positioned absolutely on the right */}
         <div className="absolute right-0 top-0 h-full">
           <EstimateHistory estimates={estimateHistory} />
         </div>
+      </div>
+
+      {/* Estimate Selector - Now part of the normal document flow */}
+      <div className="px-1 sm:px-2 md:px-4 pb-1 sm:pb-2 md:pb-4">
+        <Deck selected={selected} onSelect={(v) => setSelected(v)} />
       </div>
 
       <NameModal

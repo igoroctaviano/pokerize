@@ -169,7 +169,7 @@ export default function App() {
 
       <div className="relative">
         {/* Main Game Area - Centered independently of sidebar */}
-        <main className="absolute inset-0 flex h-[calc(100vh-140px)] flex-col items-center justify-center gap-8 px-4">
+        <main className="absolute inset-0 flex h-[calc(100vh-160px)] flex-col items-center justify-center gap-6 px-4 pt-4">
           {/* Modern Poker Table Layout */}
           <div className="relative w-full h-full max-w-4xl mx-auto">
             {/* Player Seats - Arranged like the example image */}
@@ -186,15 +186,15 @@ export default function App() {
                   if (totalPlayers <= 3) {
                     // For 3 players: evenly spaced triangle, positioned to avoid center overlap
                     angle = (index * 120) + 90 // 120° apart, starting from top
-                    radius = 180
+                    radius = 160
                   } else if (totalPlayers <= 6) {
                     // For 4-6 players: evenly distributed semi-circle, avoiding center
                     angle = (index * 180 / (totalPlayers - 1)) + 90 // 180° spread, evenly distributed
-                    radius = 200
+                    radius = 180
                   } else {
                     // For 7+ players: wider semi-circle with even distribution
                     angle = (index * 200 / (totalPlayers - 1)) + 80 // 200° spread, evenly distributed
-                    radius = 220
+                    radius = 200
                   }
                   
                   return (

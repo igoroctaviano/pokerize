@@ -33,7 +33,7 @@ export function Deck({ selected, onSelect }: { selected: string | null; onSelect
           </button>
         ))}
       </div>
-      <p className="mt-3 text-center text-sm text-muted-foreground">Choose your card 👇</p>
+      <p className="mt-3 text-center text-sm text-muted-foreground">Choose your card 👆</p>
     </div>
   )
 }

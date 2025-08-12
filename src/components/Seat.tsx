@@ -8,6 +8,7 @@ export type SeatPlayer = {
 
 export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boolean }) {
   const show = revealed && player.selected !== null
+  const hasSelected = player.selected !== null
   
   return (
     <div className="flex flex-col items-center gap-2">
@@ -39,7 +40,12 @@ export function Seat({ player, revealed }: { player: SeatPlayer; revealed: boole
       {/* Player Name */}
       <div className="flex flex-col items-center gap-1">
         <div className="w-6 h-6 rounded-full bg-muted/50 border border-border/30 flex items-center justify-center shadow-sm">
-          <div className="text-muted-foreground text-xs font-bold">♠</div>
+          <div className={cn(
+            "font-bold",
+            hasSelected ? "text-green-500 text-base" : "text-muted-foreground text-xs"
+          )}>
+            {hasSelected ? "✓" : "♠"}
+          </div>
         </div>
         <div className="text-sm font-medium text-center w-28 truncate text-foreground">
           {player.name || 'Guest'}
